@@ -1,0 +1,36 @@
+// --- SCSS Variables (Optional, but good practice) ---
+$primary-color: #ff6347; // Tomato red
+$text-color: #333;
+$background-color: #f7f7f7;
+$font-stack: 'Helvetica Neue', Arial, sans-serif;
+
+// --- Global Reset and Base Styles ---
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-stack;
+  color: $text-color;
+  background-color: $background-color;
+  line-height: 1.6;
+}
+
+// Basic Link Styling
+a {
+  color: $primary-color;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Global Headers
+h1, h2, h3 {
+  color: $text-color;
+  line-height: 1.2;
+}

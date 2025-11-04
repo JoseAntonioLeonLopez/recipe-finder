@@ -1,0 +1,66 @@
+.recipe-card {
+  /* BEM styling */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  &__image-wrapper {
+    width: 100%;
+    height: 180px; /* Fixed height for consistent grid */
+    overflow: hidden;
+  }
+  
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    
+    .recipe-card:hover & {
+      transform: scale(1.05);
+    }
+  }
+  
+  &__content {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  &__title {
+    font-size: 1.1em;
+    margin: 0;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  &__favorite-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
+
+  &--favorite {
+    border-color: #ff6347; /* Highlight favorite recipes */
+    .recipe-card__title {
+        color: #ff6347;
+    }
+  }
+}
