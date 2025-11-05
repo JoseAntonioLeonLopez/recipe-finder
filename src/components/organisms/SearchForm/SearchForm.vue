@@ -115,6 +115,7 @@ import { ref, reactive, defineEmits, computed } from 'vue';
 import SearchInput from '../../atoms/SearchInput/SearchInput.vue';
 import { useRecipeSearchStore } from '../../../stores/recipeSearch';
 import type { SearchParams } from '../../../services/api';
+import { sanitizeString } from '../../../utils/sanitizer';
 
 const emit = defineEmits(['search']);
 const searchStore = useRecipeSearchStore();
@@ -144,7 +145,11 @@ const hasActiveFilters = computed(() => {
 const validateForm = (): boolean => {
   formError.value = null;
 
-  const queryValue = searchState.query?.toString().trim();
+  const queryValue = sanitizeString(searchState.query?.toString().trim() || '');
+  if (queryValue.length > 200) {
+    formError.value = 'Search query is too long. Maximum 200 characters allowed.';
+    return false;
+  }
 
   if (!queryValue &&
     !searchState.cuisine &&
@@ -156,9 +161,61 @@ const validateForm = (): boolean => {
     return false;
   }
 
-  if (searchState.maxReadyTime && (searchState.maxReadyTime < 1 || searchState.maxReadyTime > 500)) {
-    formError.value = 'Cooking time must be between 1 and 500 minutes.';
+  if (queryValue && !/^[a-zA-Z, ]+$/.test(queryValue)) {
+    formError.value = 'Search query should only contain letters, commas, and spaces.';
     return false;
+  }
+
+  if (searchState.maxReadyTime) {
+    const maxReadyTimeNum = Number(searchState.maxReadyTime);
+    if (isNaN(maxReadyTimeNum) || maxReadyTimeNum < 1 || maxReadyTimeNum > 500) {
+      formError.value = 'Cooking time must be a number between 1 and 500 minutes.';
+      return false;
+    }
+  }
+
+  if (searchState.cuisine) {
+    if (searchState.cuisine.length > 200) {
+      formError.value = 'Cuisine is too long. Maximum 200 characters allowed.';
+      return false;
+    }
+    if (!/^[a-zA-Z, ]+$/.test(searchState.cuisine)) {
+      formError.value = 'Cuisine should only contain letters, commas, and spaces.';
+      return false;
+    }
+  }
+
+  if (searchState.diet) {
+    if (searchState.diet.length > 200) {
+      formError.value = 'Diet is too long. Maximum 200 characters allowed.';
+      return false;
+    }
+    if (!/^[a-zA-Z, ]+$/.test(searchState.diet)) {
+      formError.value = 'Diet should only contain letters, commas, and spaces.';
+      return false;
+    }
+  }
+
+  if (searchState.intolerances) {
+    if (searchState.intolerances.length > 200) {
+      formError.value = 'Intolerances is too long. Maximum 200 characters allowed.';
+      return false;
+    }
+    if (!/^[a-zA-Z, ]+$/.test(searchState.intolerances)) {
+      formError.value = 'Intolerances should only contain letters, commas, and spaces.';
+      return false;
+    }
+  }
+
+  if (searchState.type) {
+    if (searchState.type.length > 200) {
+      formError.value = 'Type is too long. Maximum 200 characters allowed.';
+      return false;
+    }
+    if (!/^[a-zA-Z ]+$/.test(searchState.type)) {
+      formError.value = 'Type should only contain letters and spaces.';
+      return false;
+    }
   }
 
   return true;
