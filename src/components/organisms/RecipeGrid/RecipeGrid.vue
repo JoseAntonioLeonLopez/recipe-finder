@@ -1,11 +1,6 @@
 <template>
   <div class="recipe-grid">
-    <RecipeCard 
-      v-for="recipe in recipes" 
-      :key="recipe.id" 
-      :recipe="recipe" 
-      class="recipe-grid__item"
-    />
+    <RecipeCard v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" class="recipe-grid__item" />
   </div>
 </template>
 
@@ -20,17 +15,50 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
-/* BEM styling for Recipe Grid Organism */
+@use '@/assets/styles/global.scss' as *;
+
 .recipe-grid {
   display: grid;
-  // Responsive grid: 2, 3, or 4 columns based on screen size
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-  gap: 25px;
-  padding: 20px 0;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
 
-  &__item {
-    // Ensures the card fills the grid cell
-    width: 100%; 
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.recipe-grid__item {
+  width: 100%;
+  animation: fadeInUp 0.4s ease backwards;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
