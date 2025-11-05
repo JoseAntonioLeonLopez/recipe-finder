@@ -1,6 +1,6 @@
 <template>
   <div class="detail-page" v-if="recipe">
-    
+
     <header class="detail-page__header">
       <button @click="router.back()" class="detail-page__back-button">
         &larr; Back to Search
@@ -10,20 +10,18 @@
 
     <div v-if="loading" class="detail-page__status">Loading recipe details...</div>
     <div v-else-if="error" class="detail-page__status detail-page__status--error">{{ error }}</div>
-    
+
     <div v-else class="detail-page__content">
-      
+
       <div class="detail-page__actions">
-        <button 
-          @click="toggleFavorite" 
-          :class="['detail-page__favorite-btn', {'detail-page__favorite-btn--active': isFav}]"
-        >
+        <button @click="toggleFavorite"
+          :class="['detail-page__favorite-btn', { 'detail-page__favorite-btn--active': isFav }]">
           {{ isFav ? '❤️ Remove from Favorites' : '🤍 Add to Favorites' }}
         </button>
       </div>
 
       <figure class="detail-page__image-container">
-        <img :src="finalImageSrc"  :alt="recipe.title" class="recipe-card__image" loading="lazy" @error="handleImageError"/>
+        <img :src="recipe.image" :alt="recipe.title" class="recipe-card__image" loading="lazy" />
         <figcaption v-if="recipe.sourceName">Source: {{ recipe.sourceName }}</figcaption>
       </figure>
 
@@ -32,14 +30,16 @@
         <ul class="detail-page__facts">
           <li>⏱️ **Ready in:** {{ recipe.readyInMinutes }} minutes</li>
           <li>🍽️ **Servings:** {{ recipe.servings }}</li>
-          <li v-if="recipe.pricePerServing">💰 **Cost per serving:** ${{ (recipe.pricePerServing / 100).toFixed(2) }}</li>
+          <li v-if="recipe.pricePerServing">💰 **Cost per serving:** ${{ (recipe.pricePerServing / 100).toFixed(2) }}
+          </li>
           <li v-if="recipe.diets && recipe.diets.length">🥗 **Diets:** {{ recipe.diets.join(', ') }}</li>
         </ul>
       </section>
 
       <section class="detail-page__instructions">
         <h2>Preparation Instructions</h2>
-        <div v-html="recipe.instructions || 'No detailed instructions available.'" class="detail-page__text-content"></div>
+        <div v-html="recipe.instructions || 'No detailed instructions available.'" class="detail-page__text-content">
+        </div>
       </section>
 
       <section class="detail-page__ingredients">
@@ -50,7 +50,7 @@
           </li>
         </ul>
       </section>
-      
+
       <section class="detail-page__summary">
         <h2>Summary</h2>
         <div v-html="recipe.summary" class="detail-page__text-content"></div>
@@ -65,7 +65,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { RecipeService } from '../services/api';
 import { useFavoritesStore } from '../stores/favorites';
-import DefaultRecipeImage from '@/assets/images/default-recipe.png';
 
 // Define props to receive the route parameter
 const props = defineProps<{
@@ -74,8 +73,6 @@ const props = defineProps<{
 
 const router = useRouter();
 const favoritesStore = useFavoritesStore();
-
-const imageFailed = ref(false);
 
 // State
 const recipe = ref<unknown>(null); // Use 'any' for the full detail object structure
@@ -87,22 +84,6 @@ const isFav = computed(() => {
   if (!recipe.value) return false;
   return favoritesStore.isFavorite(recipe.value.id);
 });
-
-const finalImageSrc = computed(() => {
-  // 1. If the image has failed, use the default.
-  // 2. If the API didn't provide an image initially, use the default.
-  if (imageFailed.value || !recipe.image) {
-    return DefaultRecipeImage;
-  }
-  // 3. Otherwise, use the URL from the API.
-  return recipe.image;
-});
-
-const handleImageError = () => {
-  // Set the failure flag, which will automatically trigger the finalImageSrc computed
-  // property to switch the source to DefaultRecipeImage.
-  imageFailed.value = true;
-};
 
 // Action: Toggle favorite status
 const toggleFavorite = () => {
@@ -126,7 +107,7 @@ const toggleFavorite = () => {
 const fetchRecipe = async (recipeId: number) => {
   loading.value = true;
   error.value = null;
-  
+
   try {
     const data = await RecipeService.getRecipeDetails(recipeId);
     recipe.value = data;
@@ -158,6 +139,7 @@ onMounted(() => {
   &__header {
     margin-bottom: 20px;
     position: relative;
+
     h1 {
       text-align: center;
       color: #ff6347;
@@ -184,7 +166,10 @@ onMounted(() => {
     text-align: center;
     padding: 40px;
     font-size: 1.2em;
-    &--error { color: #e74c3c; }
+
+    &--error {
+      color: #e74c3c;
+    }
   }
 
   &__content {
@@ -193,7 +178,7 @@ onMounted(() => {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
-  
+
   &__actions {
     display: flex;
     justify-content: flex-end;
@@ -214,7 +199,7 @@ onMounted(() => {
       background-color: #ff6347;
       color: white;
     }
-    
+
     &:hover {
       transform: scale(1.05);
     }
@@ -223,6 +208,7 @@ onMounted(() => {
   &__image-container {
     margin-bottom: 30px;
     text-align: center;
+
     figcaption {
       margin-top: 10px;
       font-style: italic;
@@ -237,11 +223,12 @@ onMounted(() => {
     border-radius: 8px;
   }
 
-  &__info-card, 
-  &__instructions, 
-  &__ingredients, 
+  &__info-card,
+  &__instructions,
+  &__ingredients,
   &__summary {
     margin-bottom: 30px;
+
     h2 {
       border-bottom: 2px solid #eee;
       padding-bottom: 5px;
@@ -253,6 +240,7 @@ onMounted(() => {
   &__facts {
     list-style: none;
     padding-left: 0;
+
     li {
       margin-bottom: 8px;
     }
@@ -261,12 +249,14 @@ onMounted(() => {
   &__ingredient-list {
     list-style: disc;
     padding-left: 20px;
+
     li {
       margin-bottom: 5px;
     }
   }
-  
+
   &__text-content {
+
     // Styling for HTML content from API (summary, instructions)
     :deep(p) {
       line-height: 1.6;

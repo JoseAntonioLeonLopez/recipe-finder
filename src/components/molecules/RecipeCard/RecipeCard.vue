@@ -1,21 +1,14 @@
 <template>
-  <div class="recipe-card" @click="goToDetails" :class="{'recipe-card--favorite': isFav}">
+  <div class="recipe-card" @click="goToDetails" :class="{ 'recipe-card--favorite': isFav }">
     <div class="recipe-card__image-wrapper">
-      <img 
-        :src="finalImageSrc" 
-        :alt="recipe.title" 
-        class="recipe-card__image" 
-        loading="lazy"
-        @error="handleImageError"  />
+      <img :src="finalImageSrc" :alt="recipe.title" class="recipe-card__image" loading="lazy"
+        @error="handleImageError" />
     </div>
     <div class="recipe-card__content">
       <h3 class="recipe-card__title">{{ recipe.title }}</h3>
-      <button 
-        @click.stop="toggleFavorite" 
-        class="recipe-card__favorite-btn"
-        :aria-label="isFav ? 'Remove from favorites' : 'Add to favorites'"
-      >
-        <span class="icon">{{ isFav ? '❤️' : '🤍' }}</span> 
+      <button @click.stop="toggleFavorite" class="recipe-card__favorite-btn"
+        :aria-label="isFav ? 'Remove from favorites' : 'Add to favorites'">
+        <span class="icon">{{ isFav ? '❤️' : '🤍' }}</span>
       </button>
     </div>
   </div>
@@ -72,5 +65,4 @@ const toggleFavorite = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/styles/global.scss' as *; // Import SCSS styles
-</style>
+@use '@/assets/styles/global.scss' as *; // Import SCSS styles</style>
