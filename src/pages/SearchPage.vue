@@ -163,7 +163,8 @@ const handleRetry = () => {
 };
 
 const quickSearch = (query: string) => {
-  handleSearch({ query });
+  currentPage.value = 1;
+  performSearch({ query });
 };
 </script>
 

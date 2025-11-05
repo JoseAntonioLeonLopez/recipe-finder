@@ -100,6 +100,10 @@ const visiblePages = computed((): (number | string)[] => {
     pages.push(total);
   }
 
+  if (!pages.includes(current)) {
+    pages.splice(pages.indexOf('...') > -1 ? pages.indexOf('...') : pages.length, 0, current);
+  }
+
   return pages;
 });
 
@@ -243,7 +247,6 @@ const changePage = (page: number | string) => {
   overflow: hidden;
 
   &::before {
-    content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, $primary-500 0%, $purple-500 100%);
