@@ -84,6 +84,10 @@
         <div class="search-page__empty-suggestions">
           <span class="search-page__empty-label">Try searching for:</span>
           <div class="search-page__empty-tags">
+            <button @click="quickSearch('burger')" class="search-page__empty-tag">Burger</button>
+            <button @click="quickSearch('pizza')" class="search-page__empty-tag">Pizza</button>
+            <button @click="quickSearch('pork')" class="search-page__empty-tag">Pork</button>
+            <button @click="quickSearch('fish')" class="search-page__empty-tag">Fish</button>
             <button @click="quickSearch('pasta')" class="search-page__empty-tag">Pasta</button>
             <button @click="quickSearch('chicken')" class="search-page__empty-tag">Chicken</button>
             <button @click="quickSearch('salad')" class="search-page__empty-tag">Salad</button>
