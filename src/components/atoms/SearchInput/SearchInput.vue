@@ -1,15 +1,9 @@
 <template>
   <div class="search-input">
     <label v-if="label" :for="id" class="search-input__label">{{ label }}</label>
-    <input
-      :id="id"
-      :type="type"
-      :value="modelValue"
-      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-      @blur="handleBlur"
-      :placeholder="placeholder"
-      class="search-input__field"
-    />
+    <input :id="id" :type="type" :value="modelValue"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" @blur="handleBlur"
+      :placeholder="placeholder" class="search-input__field" />
   </div>
 </template>
 
@@ -60,6 +54,8 @@ const handleBlur = (event: Event) => {
 </script>
 
 <style lang="scss" scoped>
+@use '@/assets/styles/global.scss' as *;
+
 /* BEM styles for Search Input Atom */
 .search-input {
   display: flex;
@@ -80,8 +76,8 @@ const handleBlur = (event: Event) => {
     transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus {
-      border-color: #ff6347;
-      box-shadow: 0 0 0 2px rgba(255, 99, 71, 0.2);
+      border-color: $primary-400;
+      box-shadow: $primary-700;
       outline: none;
     }
   }
