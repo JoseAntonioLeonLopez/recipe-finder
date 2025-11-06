@@ -199,10 +199,6 @@ const toggleFavorite = () => {
       color: white;
       fill: white;
     }
-
-    &:hover {
-      background: darken($error, 5%);
-    }
   }
 }
 

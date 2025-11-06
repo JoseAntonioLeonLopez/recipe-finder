@@ -100,8 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { RecipeService, type SearchParams } from '../services/api';
+import { type SearchParams } from '../services/api';
 import SearchForm from '../components/organisms/SearchForm/SearchForm.vue';
 import RecipeGrid from '../components/organisms/RecipeGrid/RecipeGrid.vue';
 import Pagination from '../components/molecules/Pagination/Pagination.vue';
@@ -109,62 +108,26 @@ import { storeToRefs } from 'pinia';
 import { useRecipeSearchStore } from '@/stores/recipeSearch';
 
 const store = useRecipeSearchStore();
-const { recipes, loading, totalResults, currentPage } = storeToRefs(store);
+const { recipes, loading, error, totalResults, currentPage, totalPages } = storeToRefs(store);
 
-const error = ref<string | null>(null);
 const recipesPerPage = 12;
-let lastSearchParams: SearchParams = { query: '' };
-
-const totalPages = computed(() => Math.ceil(totalResults.value / recipesPerPage));
-
-async function performSearch(params: SearchParams) {
-  loading.value = true;
-  error.value = null;
-  recipes.value = [];
-  lastSearchParams = params;
-
-  try {
-    const offset = (currentPage.value - 1) * recipesPerPage;
-
-    const result = await RecipeService.searchRecipes({
-      ...params,
-      offset,
-      number: recipesPerPage,
-    });
-
-    recipes.value = result.results;
-    totalResults.value = result.totalResults;
-
-  } catch (err: unknown) {
-    error.value = err.message || 'An unknown error occurred during the search.';
-    totalResults.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
 
 const handleSearch = (params: SearchParams) => {
-  currentPage.value = 1;
-  performSearch(params);
+  store.search(params, 1);
 };
 
 const handlePageChange = (newPage: number) => {
-  if (newPage >= 1 && newPage <= totalPages.value) {
-    currentPage.value = newPage;
-    performSearch(lastSearchParams);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  store.goToPage(newPage);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const handleRetry = () => {
-  if (lastSearchParams.query) {
-    performSearch(lastSearchParams);
-  }
+  const params = store.currentParams || { query: '' };
+  store.search(params, 1);
 };
 
 const quickSearch = (query: string) => {
-  currentPage.value = 1;
-  performSearch({ query });
+  store.search({ query }, 1);
 };
 </script>
 

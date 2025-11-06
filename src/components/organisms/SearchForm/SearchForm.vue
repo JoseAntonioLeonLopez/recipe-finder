@@ -96,6 +96,15 @@
       <span>{{ loading ? 'Searching...' : 'Search Recipes' }}</span>
     </button>
 
+    <!-- Clear Results Button -->
+    <button v-if="hasResults" type="button" @click="clearResults" class="search-form__clear-results">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+      </svg>
+      <span>Clear Results</span>
+    </button>
+
     <!-- Error Message -->
     <Transition name="fade">
       <div v-if="formError" class="search-form__error">
@@ -112,6 +121,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, defineEmits, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import SearchInput from '../../atoms/SearchInput/SearchInput.vue';
 import { useRecipeSearchStore } from '../../../stores/recipeSearch';
 import type { SearchParams } from '../../../services/api';
@@ -119,6 +129,7 @@ import { sanitizeString } from '../../../utils/sanitizer';
 
 const emit = defineEmits(['search']);
 const searchStore = useRecipeSearchStore();
+const { recipes } = storeToRefs(searchStore);
 
 const showFilters = ref(false);
 
@@ -140,6 +151,10 @@ const hasActiveFilters = computed(() => {
   return !!(searchState.cuisine || searchState.diet ||
     searchState.intolerances || searchState.type ||
     searchState.maxReadyTime);
+});
+
+const hasResults = computed(() => {
+  return recipes.value.length > 0;
 });
 
 const validateForm = (): boolean => {
@@ -227,6 +242,10 @@ const clearFilters = () => {
   searchState.intolerances = '';
   searchState.type = '';
   searchState.maxReadyTime = 0;
+};
+
+const clearResults = () => {
+  searchStore.clearResults();
 };
 
 const submitSearch = () => {
@@ -431,6 +450,46 @@ const submitSearch = () => {
   animation: spin 0.6s linear infinite;
   position: relative;
   z-index: 1;
+}
+
+// Clear Results Button
+.search-form__clear-results {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  margin-top: 0.75rem;
+  background: white;
+  border: 2px solid $slate-300;
+  border-radius: $radius-lg;
+  font-size: $text-sm;
+  font-weight: $font-semibold;
+  color: $slate-700;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    transition: transform $transition-base;
+  }
+
+  &:hover {
+    background: $slate-50;
+    border-color: $slate-400;
+    color: $slate-900;
+    transform: translateY(-1px);
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 // Error Message
