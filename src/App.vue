@@ -78,6 +78,8 @@ $shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   top: 0;
   z-index: 100;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.06);
 }
 
 .app-nav {

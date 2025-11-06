@@ -129,7 +129,7 @@ const confirmClear = () => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/global.scss';
+@use '@/assets/styles/global.scss' as *;
 
 .favorites-page {
   min-height: calc(100vh - 200px);
@@ -491,7 +491,6 @@ const confirmClear = () => {
     color: white;
 
     &:hover {
-      background: darken($error, 5%);
       transform: translateY(-2px);
       box-shadow: $shadow-md;
     }
