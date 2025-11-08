@@ -139,7 +139,6 @@
             </div>
             <ul class="detail-page__ingredient-list">
               <li v-for="ing in recipe.extendedIngredients" :key="ing.id" class="detail-page__ingredient-item">
-                <div class="detail-page__ingredient-checkbox"></div>
                 <div class="detail-page__ingredient-content">
                   <span class="detail-page__ingredient-amount">{{ ing.amount }} {{ ing.unit }}</span>
                   <span class="detail-page__ingredient-name">{{ ing.nameClean }}</span>
